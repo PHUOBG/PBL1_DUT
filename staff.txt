@@ -1,0 +1,28 @@
+3
+100
+admin
+123
+Quản Trị Viên
+Quản lý
+50000.00
+0.00
+0
+0
+101
+ngocphuong
+456
+Hoàng Thị Ngọc Phương
+Nhân Viên
+0.00
+0.00
+0
+0
+102
+hongphuc
+123
+Le Doan Hong Phuc
+Nhan vien
+20000.00
+0.00
+0
+0

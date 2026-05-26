@@ -1,0 +1,79 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build G-COFFEE (Windows)",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "${workspaceFolder}/gcoffee_raylib.c",
+                "-o", "${workspaceFolder}/gcoffee.exe",
+                "-I", "C:/raylib/include",
+                "-L", "C:/raylib/lib",
+                "-lraylib",
+                "-lopengl32",
+                "-lgdi32",
+                "-lwinmm",
+                "-lm",
+                "-mwindows",
+                "-Wall",
+                "-Wno-unused-function",
+                "-Wno-unused-variable",
+                "-O2"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build G-COFFEE (Linux/macOS)",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "${workspaceFolder}/gcoffee_raylib.c",
+                "-o", "${workspaceFolder}/gcoffee",
+                "-lraylib",
+                "-lm",
+                "-Wall",
+                "-Wno-unused-function",
+                "-Wno-unused-variable",
+                "-O2"
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build & Run (Windows)",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "${workspaceFolder}/gcoffee_raylib.c",
+                "-o", "${workspaceFolder}/gcoffee.exe",
+                "-I", "C:/raylib/include",
+                "-L", "C:/raylib/lib",
+                "-lraylib",
+                "-lopengl32",
+                "-lgdi32",
+                "-lwinmm",
+                "-lm",
+                "-mwindows",
+                "-O2"
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "dependsOrder": "sequence",
+            "presentation": { "reveal": "always", "panel": "shared" }
+        }
+    ]
+}
