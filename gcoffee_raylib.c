@@ -548,6 +548,9 @@ static void InputField(Rectangle r, int idx, const char *placeholder, float fs) 
 /* ═══════════════════════════════════════════════════════════════════
    XỬ LÝ PHÍM / INPUT
 ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   XỬ LÝ PHÍM / INPUT
+═══════════════════════════════════════════════════════════════════ */
 static void processInput(void) {
     gCursorBlink += GetFrameTime();
     if (gCursorBlink > 2.f) gCursorBlink = 0;
@@ -555,6 +558,17 @@ static void processInput(void) {
     if (idx < 0 || idx >= MAX_INP) return;
     if (IsKeyPressed(KEY_ESCAPE))  { gActiveInp = -1; return; }
     if (IsKeyPressed(KEY_TAB))     { gActiveInp = (gActiveInp + 1) % MAX_INP; return; }
+    
+    /* TỰ ĐỘNG CHUYỂN SANG Ô PASSWORD KHI NHẤN ENTER Ở Ô USERNAME (MÀN HÌNH LOGIN) */
+    if (gScreen == SCR_LOGIN && idx == 0 && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))) {
+        gActiveInp = 1; // Di chuyển tiêu điểm con trỏ xuống ô Password
+        
+        /* BÍ QUYẾT: Nuốt phím bằng cách ép bộ đệm Raylib đọc trạng thái hiện tại ngay lập tức,
+           ngăn không cho hàm drawLogin() phía sau nhận diện nhầm phím Enter ở Frame này */
+        while (GetCharPressed() > 0); 
+        return;
+    }
+
     if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE))
         utf8DeleteLast(gInp[idx], &gInpLen[idx]);
     int cp = GetCharPressed();
@@ -567,7 +581,6 @@ static void processInput(void) {
         cp = GetCharPressed();
     }
 }
-
 /* ═══════════════════════════════════════════════════════════════════
    CẬP NHẬT CUỘN
 ═══════════════════════════════════════════════════════════════════ */
@@ -741,11 +754,11 @@ static void drawLogin(void) {
     gInpPass[1]=true;
     InputField((Rectangle){(float)fx,(float)(cy+232),fw,46},1,"Nhập password...",15);
 
+    /* 🛠️ CHỈ GIỮ LẠI SỰ KIỆN CLICK CHUỘT VÀO NÚT BUTTON ĐĂNG NHẬP */
     bool clk = Button((Rectangle){(float)fx,(float)(cy+300),(float)fw,50},
                       "ĐĂNG NHẬP",CA_GOLD_DIM,CA_GOLD,0);
-    bool enterPressed = (gActiveInp==0||gActiveInp==1) && IsKeyPressed(KEY_ENTER);
 
-    if (clk || enterPressed) {
+    if (clk) {
         bool found=false;
         for (int i=0;i<gStaffCount;i++){
             if (strcmp(gStaff[i].username,gInp[0])==0 &&
@@ -763,7 +776,6 @@ static void drawLogin(void) {
     Vector2 hv = Measure(hint,11);
     DrawTxtL(hint, cx+(cw-hv.x)*.5f, cy+ch-24.f, 11.f, CT_DIM);
 }
-
 /* ═══════════════════════════════════════════════════════════════════
    SƠ ĐỒ BÀN
 ═══════════════════════════════════════════════════════════════════ */
