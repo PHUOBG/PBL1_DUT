@@ -1421,12 +1421,20 @@ static void drawChart(void) {
     if (fp){
         char line[256];
         while(fgets(line,256,fp)){
-            char dt[15]; float amt;
-            if(sscanf(line,"%10s - Ban %*d - Tong: %f VND",dt,&amt)==2){
-                bool found3=false;
-                for(int i=0;i<dc;i++) if(strcmp(data[i].date,dt)==0){data[i].total+=amt;found3=true;break;}
-                if(!found3&&dc<30){strcpy(data[dc].date,dt);data[dc].total=amt;dc++;}
-            }
+            /* Lấy ngày: 10 ký tự đầu dạng DD/MM/YYYY */
+            char dt[15]={0};
+            if(strlen(line)<10) continue;
+            strncpy(dt,line,10); dt[10]=0;
+            /* Kiểm tra định dạng ngày DD/MM/YYYY */
+            if(dt[2]!='/' || dt[5]!='/') continue;
+            /* Tìm số tiền: tìm chuỗi con ": " rồi đọc số sau đó */
+            char *colon=strrchr(line,':');
+            if(!colon) continue;
+            float amt=0;
+            if(sscanf(colon+1," %f",&amt)!=1) continue;
+            bool found3=false;
+            for(int i=0;i<dc;i++) if(strcmp(data[i].date,dt)==0){data[i].total+=amt;found3=true;break;}
+            if(!found3&&dc<30){strcpy(data[dc].date,dt);data[dc].total=amt;dc++;}
         }
         fclose(fp);
     }
